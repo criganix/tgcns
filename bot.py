@@ -1,0 +1,72 @@
+import logging
+import random
+import json
+import os
+from datetime import datetime, timedelta, timezone
+from telegram import Update
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+
+TOKEN = "8973901312:AAF0jq2rfuqHe1ltkgVR7fsdoqlvhs6aw-c"
+FISIER_CONTOR = "contor_borde1.json"
+
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+def incarc_contor():
+    if os.path.exists(FISIER_CONTOR):
+        try:
+            with open(FISIER_CONTOR, "r") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def salveaza_contor(date):
+    with open(FISIER_CONTOR, "w") as f:
+        json.dump(date, f)
+
+borde_memorate = incarc_contor()
+
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global borde_memorate
+    text = update.message.text.strip()
+    
+    if text.isdigit() and len(text) == 4:
+        # Mesajul intermediar
+        await update.message.reply_text("Solicitarea este in curs de procesare.")
+
+        # Logica de contor consecutiv (+1) pentru fiecare număr de bord
+        if text in borde_memorate:
+            borde_memorate[text] += 1
+            if borde_memorate[text] > 9999:
+                borde_memorate[text] = 1000
+        else:
+            borde_memorate[text] = random.randint(1000, 9900)
+            
+        salveaza_contor(borde_memorate)
+
+        ultimele_cifre = borde_memorate[text]
+        bilet_nr = f"{text}{ultimele_cifre:04d}"
+        
+        # Ora curentă Moldovei (UTC+3)
+        acum = datetime.now(timezone.utc) + timedelta(hours=3)
+        data_str = acum.strftime("%d.%m.%Y")
+        ora_str = acum.strftime("%H:%M")
+        
+        # Formatare exactă cu spațiu la început și evidențiere Markdown pentru bilet_nr
+        mesaj_raspuns = (
+            f"Bilet electronic nr. \n"
+            f" `{bilet_nr}` \n"
+            f" Data {data_str} ora {ora_str} \n"
+            f" Valabil 1 ora \n"
+            f" Pret 7 MDL \n"
+            f" Numar de bord {text}"
+        )
+        await update.message.reply_text(mesaj_raspuns, parse_mode="Markdown")
+
+if __name__ == '__main__':
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
+    app.run_polling()
