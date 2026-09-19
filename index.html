@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>iOS Messages</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* HEADER iOS */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background-color: #000000;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* BUTON ÎNAPOI - DOAR SĂGEATĂ */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: #1c1c1e;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(180deg, #8e8e93 0%, #636366 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+
+        .avatar svg {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+        }
+
+        .sender-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .sender-name svg {
+            width: 10px;
+            height: 10px;
+            fill: #8e8e93;
+        }
+
+        /* AREA CHAT */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timestamp-divider {
+            text-align: center;
+            color: #8e8e93;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        /* BULE MESAJ */
+        .message-row {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .message-row.sent {
+            align-items: flex-end;
+        }
+
+        .message-row.received {
+            align-items: flex-start;
+        }
+
+        .bubble {
+            max-width: 78%;
+            padding: 10px 14px;
+            font-size: 16px;
+            line-height: 1.35;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .sent .bubble {
+            background-color: #34c759; /* Verde iOS SMS */
+            color: #ffffff;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        .received .bubble {
+            background-color: #26252a; /* Gri închis asfalt iOS */
+            color: #ffffff;
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        /* INPUT AREA */
+        .input-bar {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px 24px 12px;
+            background-color: #000000;
+            gap: 8px;
+        }
+
+        .add-btn {
+            background: #1c1c1e;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            background-color: #1c1c1e;
+            border: 1px solid #2c2c2e;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #8e8e93;
+        }
+
+        .mic-btn {
+            background: none;
+            border: none;
+            color: #8e8e93;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header iOS -->
+    <div class="header">
+        <button class="back-btn" onclick="closeApp()">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <div class="contact-info">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+            <div class="sender-name">
+                7001
+                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </div>
+        </div>
+        <div style="width: 36px;"></div> <!-- Element de echilibrare pentru centrare -->
+    </div>
+
+    <!-- Zona de mesaje -->
+    <div class="chat-container" id="chat">
+        <div class="timestamp-divider">
+            Mesaj text • SMS<br><span id="current-date"></span>
+        </div>
+    </div>
+
+    <!-- Bara de introducere SMS -->
+    <div class="input-bar">
+        <button class="add-btn">+</button>
+        <div class="input-wrapper">
+            <input type="number" id="boardInput" placeholder="Mesaj text • SMS" pattern="\d*" inputmode="numeric">
+            <button class="mic-btn">
+                <svg width="16" height="20" viewBox="0 0 24 24" fill="#8e8e93"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function formatIOSDate() {
+            const days = ['Dum.', 'Lun.', 'Mar.', 'Mie.', 'Joi', 'Vin.', 'Sâm.'];
+            const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sep.', 'oct.', 'noi.', 'dec.'];
+            const now = new Date();
+            return `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        document.getElementById('current-date').innerText = formatIOSDate();
+
+        const inputField = document.getElementById('boardInput');
+        const chat = document.getElementById('chat');
+
+        inputField.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendSMS();
+            }
+        });
+
+        function sendSMS() {
+            const text = inputField.value.trim();
+            if (text.length !== 4) return;
+
+            appendMessage(text, 'sent');
+            inputField.value = '';
+
+            setTimeout(() => {
+                appendMessage("Solicitarea este in curs de procesare.", 'received');
+
+                setTimeout(() => {
+                    generateTicket(text);
+                }, 1500);
+            }, 600);
+        }
+
+        function appendMessage(text, type) {
+            const row = document.createElement('div');
+            row.className = `message-row ${type}`;
+            row.innerHTML = `<div class="bubble">${text}</div>`;
+            chat.appendChild(row);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function generateTicket(boardNr) {
+            let lastCounter = localStorage.getItem('contor_' + boardNr) || Math.floor(1000 + Math.random() * 8900);
+            lastCounter = parseInt(lastCounter) + 1;
+            if (lastCounter > 9999) lastCounter = 1000;
+            localStorage.setItem('contor_' + boardNr, lastCounter);
+
+            const biletNr = `${boardNr}${lastCounter.toString().padStart(4, '0')}`;
+
+            const now = new Date();
+            const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth()+1).toString().padStart(2, '0')}.${now.getFullYear()}`;
+            const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            const biletText = `Bilet electronic nr. \n ${biletNr} \n Data ${dateStr} ora ${timeStr} \n Valabil 1 ora \n Pret 7 MDL \n Numar de bord ${boardNr}`;
+
+            appendMessage(biletText, 'received');
+        }
+
+        function closeApp() {
+            tg.close();
+        }
+    </script>
+</body>
+</html>
