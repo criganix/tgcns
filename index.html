@@ -24,15 +24,15 @@
             touch-action: manipulation;
         }
 
-        /* HEADER iOS */
+        /* HEADER iOS - Coborât pentru a nu se suprapune cu butoanele Telegram */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 10px 16px;
+            margin-top: 36px; /* Spaiu pentru a evita butonul x/Închide de la Telegram */
             background-color: #000000;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
-            padding-top: calc(env(safe-area-inset-top) + 8px);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
         }
 
         .back-btn {
@@ -60,8 +60,8 @@
         }
 
         .avatar {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             background: linear-gradient(180deg, #8e8e93 0%, #636366 100%);
             border-radius: 50%;
             display: flex;
@@ -71,18 +71,19 @@
         }
 
         .avatar svg {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             fill: #ffffff;
         }
 
         .sender-name {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #ffffff;
             display: flex;
             align-items: center;
             gap: 2px;
+            letter-spacing: -0.2px;
         }
 
         .sender-name svg {
@@ -91,14 +92,14 @@
             fill: #8e8e93;
         }
 
-        /* AREA CHAT */
+        /* CHAT AREA */
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 12px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -107,21 +108,21 @@
             color: #8e8e93;
             font-size: 11px;
             font-weight: 500;
-            margin: 6px 0;
-            line-height: 1.4;
+            margin: 8px 0;
+            line-height: 1.35;
         }
 
-        /* BULE MESAJ CU ANIMAȚII FLUIDE */
+        /* BULE DE MESAJ CU ANIMAȚIE NATIVĂ iOS */
         .message-row {
             display: flex;
             flex-direction: column;
             width: 100%;
             opacity: 0;
-            transform: translateY(12px) scale(0.98);
-            animation: popIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            transform: translateY(10px) scale(0.97);
+            animation: iosSpring 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
         }
 
-        @keyframes popIn {
+        @keyframes iosSpring {
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -137,12 +138,13 @@
         }
 
         .bubble {
-            max-width: 78%;
-            padding: 10px 14px;
+            max-width: 75%;
+            padding: 9px 13px;
             font-size: 16px;
             line-height: 1.35;
             white-space: pre-wrap;
             word-wrap: break-word;
+            letter-spacing: -0.3px;
         }
 
         .sent .bubble {
@@ -157,12 +159,11 @@
             border-radius: 18px 18px 18px 4px;
         }
 
-        /* INPUT AREA */
+        /* INPUT BAR */
         .input-bar {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
+            padding: 8px 12px 20px 12px;
             background-color: #000000;
             gap: 8px;
             border-top: 0.5px solid rgba(255, 255, 255, 0.1);
@@ -206,7 +207,6 @@
             color: #8e8e93;
         }
 
-        /* BUTON DE TRIMIS VIZIBIL */
         .send-btn {
             background: #34c759;
             border: none;
@@ -217,16 +217,16 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.15s ease;
+            transition: transform 0.1s ease;
         }
 
         .send-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.92);
         }
 
         .send-btn svg {
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             fill: #ffffff;
         }
 
@@ -261,18 +261,19 @@
         <div style="width: 32px;"></div>
     </div>
 
-    <!-- Zona de chat -->
+    <!-- Zona Chat -->
     <div class="chat-container" id="chat">
         <div class="timestamp-divider">
             Mesaj text • SMS<br><span id="current-date"></span>
         </div>
     </div>
 
-    <!-- Input Bar cu buton Send dedicat -->
+    <!-- Input Bar -->
     <div class="input-bar">
         <button class="add-btn">+</button>
         <div class="input-wrapper">
-            <input type="text" id="boardInput" inputmode="numeric" pattern="[0-9]*" placeholder="Mesaj text • SMS" autocomplete="off">
+            <!-- Câmp de text standard pentru tastatură integrală cu litere și cifre -->
+            <input type="text" id="boardInput" placeholder="Mesaj text • SMS" autocomplete="off">
             
             <button class="mic-btn" id="micBtn">
                 <svg width="16" height="20" viewBox="0 0 24 24" fill="#8e8e93"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
@@ -287,11 +288,9 @@
     <script>
         const tg = window.Telegram.WebApp;
         
-        // Configurări ecran complet și dezactivare gesturi Telegram
         if (tg) {
             tg.ready();
             if (tg.expand) tg.expand();
-            if (tg.requestFullscreen) tg.requestFullscreen();
             if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
         }
 
@@ -308,7 +307,7 @@
         const sendBtn = document.getElementById('sendBtn');
         const micBtn = document.getElementById('micBtn');
 
-        // Control afișare buton Trimitere (săgeata verde)
+        // Control afișare buton verde de trimitere
         inputField.addEventListener('input', function () {
             if (this.value.trim().length > 0) {
                 sendBtn.style.display = 'flex';
@@ -327,7 +326,7 @@
 
         function sendSMS() {
             const text = inputField.value.trim();
-            if (text.length !== 4) return;
+            if (text.length === 0) return;
 
             appendMessage(text, 'sent');
             inputField.value = '';
