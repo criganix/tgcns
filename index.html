@@ -10,119 +10,104 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
             background-color: #000000;
             color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             touch-action: manipulation;
         }
 
-        /* HEADER iOS - Coborât pentru a nu se suprapune cu butoanele Telegram */
-        .header {
+        body {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: space-between;
-            padding: 10px 16px;
-            margin-top: 36px; /* Spaiu pentru a evita butonul x/Închide de la Telegram */
-            background-color: #000000;
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.12);
         }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            background-color: #1c1c1e;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-        }
-
-        .back-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: #ffffff;
-        }
-
-        .contact-info {
+        /* HEADER iOS - Spațiere ajustată pentru a fi sub bara Telegram */
+        .header {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            padding-top: calc(env(safe-area-inset-top) + 52px); /* Spatiu generos pentru a evita suprapunerea */
+            padding-bottom: 12px;
+            background-color: #000000;
+            border-bottom: 0.5px solid #1c1c1e;
+            position: relative;
+            z-index: 10;
         }
 
         .avatar {
-            width: 46px;
-            height: 46px;
+            width: 60px;
+            height: 60px;
             background: linear-gradient(180deg, #8e8e93 0%, #636366 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 2px;
+            margin-bottom: 6px;
         }
 
         .avatar svg {
-            width: 28px;
-            height: 28px;
+            width: 38px;
+            height: 38px;
             fill: #ffffff;
         }
 
         .sender-name {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
             letter-spacing: -0.2px;
         }
 
         .sender-name svg {
-            width: 10px;
-            height: 10px;
+            width: 11px;
+            height: 11px;
             fill: #8e8e93;
         }
 
-        /* CHAT AREA */
+        /* ZONA DE CHAT */
         .chat-container {
             flex: 1;
             overflow-y: auto;
-            padding: 12px 16px;
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             -webkit-overflow-scrolling: touch;
         }
 
         .timestamp-divider {
             text-align: center;
             color: #8e8e93;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
-            margin: 8px 0;
-            line-height: 1.35;
+            margin: 12px 0;
+            line-height: 1.4;
+            letter-spacing: -0.1px;
         }
 
-        /* BULE DE MESAJ CU ANIMAȚIE NATIVĂ iOS */
+        /* BULE DE MESAJ iOS REALISTE */
         .message-row {
             display: flex;
             flex-direction: column;
             width: 100%;
             opacity: 0;
-            transform: translateY(10px) scale(0.97);
-            animation: iosSpring 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+            transform: translateY(12px) scale(0.96);
+            animation: iosPop 0.22s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
         }
 
-        @keyframes iosSpring {
+        @keyframes iosPop {
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -138,59 +123,62 @@
         }
 
         .bubble {
-            max-width: 75%;
-            padding: 9px 13px;
-            font-size: 16px;
-            line-height: 1.35;
+            max-width: 78%;
+            padding: 10px 16px;
+            font-size: 17px;
+            line-height: 1.32;
             white-space: pre-wrap;
             word-wrap: break-word;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.4px;
         }
 
         .sent .bubble {
             background-color: #34c759;
             color: #ffffff;
-            border-radius: 18px 18px 4px 18px;
+            border-radius: 20px 20px 5px 20px;
         }
 
         .received .bubble {
             background-color: #26252a;
             color: #ffffff;
-            border-radius: 18px 18px 18px 4px;
+            border-radius: 20px 20px 20px 5px;
         }
 
-        /* INPUT BAR */
+        /* INPUT BAR iOS 1:1 */
         .input-bar {
             display: flex;
             align-items: center;
-            padding: 8px 12px 20px 12px;
+            padding: 8px 12px;
+            padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
             background-color: #000000;
-            gap: 8px;
-            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+            gap: 10px;
         }
 
         .add-btn {
             background: #1c1c1e;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #8e8e93;
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 300;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .input-wrapper {
             flex: 1;
             background-color: #1c1c1e;
             border: 1px solid #2c2c2e;
-            border-radius: 20px;
+            border-radius: 22px;
             display: flex;
             align-items: center;
-            padding: 4px 8px 4px 12px;
+            padding: 6px 10px 6px 14px;
+            min-height: 40px;
         }
 
         .input-wrapper input {
@@ -198,9 +186,9 @@
             background: transparent;
             border: none;
             color: #ffffff;
-            font-size: 16px;
+            font-size: 17px;
             outline: none;
-            padding: 4px 0;
+            letter-spacing: -0.3px;
         }
 
         .input-wrapper input::placeholder {
@@ -210,55 +198,50 @@
         .send-btn {
             background: #34c759;
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            flex-shrink: 0;
             transition: transform 0.1s ease;
         }
 
         .send-btn:active {
-            transform: scale(0.92);
+            transform: scale(0.9);
         }
 
         .send-btn svg {
-            width: 15px;
-            height: 15px;
+            width: 16px;
+            height: 16px;
             fill: #ffffff;
         }
 
         .mic-btn {
             background: none;
             border: none;
-            color: #8e8e93;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            padding: 4px;
+            padding: 2px;
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header iOS -->
+    <!-- Header iOS corectat ca poziție și dimensiune -->
     <div class="header">
-        <button class="back-btn" onclick="closeApp()">
-            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-        </button>
-        <div class="contact-info">
-            <div class="avatar">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </div>
-            <div class="sender-name">
-                7000
-                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-            </div>
+        <div class="avatar">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
-        <div style="width: 32px;"></div>
+        <div class="sender-name">
+            7000
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+        </div>
     </div>
 
     <!-- Zona Chat -->
@@ -268,15 +251,14 @@
         </div>
     </div>
 
-    <!-- Input Bar -->
+    <!-- Bara de introducere mesaj -->
     <div class="input-bar">
         <button class="add-btn">+</button>
         <div class="input-wrapper">
-            <!-- Câmp de text standard pentru tastatură integrală cu litere și cifre -->
             <input type="text" id="boardInput" placeholder="Mesaj text • SMS" autocomplete="off">
             
             <button class="mic-btn" id="micBtn">
-                <svg width="16" height="20" viewBox="0 0 24 24" fill="#8e8e93"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                <svg width="17" height="20" viewBox="0 0 24 24" fill="#8e8e93"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </button>
 
             <button class="send-btn" id="sendBtn" onclick="sendSMS()">
@@ -307,7 +289,6 @@
         const sendBtn = document.getElementById('sendBtn');
         const micBtn = document.getElementById('micBtn');
 
-        // Control afișare buton verde de trimitere
         inputField.addEventListener('input', function () {
             if (this.value.trim().length > 0) {
                 sendBtn.style.display = 'flex';
@@ -365,12 +346,6 @@
             const biletText = `Bilet electronic nr. \n ${biletNr} \n Data ${dateStr} ora ${timeStr} \n Valabil 1 ora \n Pret 7 MDL \n Numar de bord ${boardNr}`;
 
             appendMessage(biletText, 'received');
-        }
-
-        function closeApp() {
-            if (tg && tg.close) {
-                tg.close();
-            }
         }
     </script>
 </body>
